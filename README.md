@@ -28,13 +28,27 @@ What questions are you trying to solve with your data?
 ## Source datasets 
 What datasets are you sourcing from?
 
+
+### CoinAPI
+
 - https://www.coinapi.io/
+
+<br/>
+
+### Alpaca
+
+- Find coins available [here](https://alpaca.markets/learn/getting-started-with-alpaca-crypto-api/)
+- Docs on Historical Crypto data can be found [here](https://alpaca.markets/docs/api-references/market-data-api/crypto-pricing-data/historical/)
+
+
+Use the snippet below to curl in some historical data
+
 
 ```bash
 
 curl --request GET 'https://data.alpaca.markets/v1beta2/crypto/trades?symbols=DOGE/USD&start=2022-03-01T00:00:00.00Z&end=2022-03-05T00:00:00.00Z' \
---header 'Apca-Api-Key-Id: PKTPUN6100LD9HKA1T2J' \
---header 'Apca-Api-Secret-Key: WwxMRFv9hBl1u0WJSi7S6CljUnwnCuEbG56Ma3Ji'
+--header 'Apca-Api-Key-Id: <api-key-id>' \
+--header 'Apca-Api-Secret-Key: <api-secret-key>'
 
 ```
 
