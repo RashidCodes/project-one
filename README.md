@@ -1,4 +1,4 @@
-i# Project plan 
+# Project plan 
 
 ## Objective 
 What would you like people to do with the data you have produced? Are you supporting BI or ML use-cases? 
