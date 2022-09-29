@@ -66,16 +66,20 @@ curl --request GET 'https://data.alpaca.markets/v1beta2/crypto/trades?symbols=DO
     <td>Puneet, Helen</td>
   </tr>
   <tr>
+    <td>Transform</td>
+    <td>Anoop, Rashid</td>
+  </tr>
+  <tr>
     <td>Stitching the ELT Pipeline Together</td>
-    <td>Puneet, Helen</td>
+    <td>Puneet, Helen, Anoop, Rashid</td>
   </tr>
   <tr>
     <td>Unit tests and documentation</td>
-    <td>Puneet, Helen</td>
+    <td>Puneet, Helen, Anoop, Rashid</td>
   </tr>
   <tr>
-    <td>Transform</td>
-    <td>Anoop, Rashid</td>
+    <td>Dockerize solution</td>
+    <td>Puneet, Helen, Anoop, Rashid</td>
   </tr>
   <tr>
     <td>Creating the AWS Services (RDS, ECS)</td>
