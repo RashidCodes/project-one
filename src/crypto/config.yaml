@@ -1,0 +1,9 @@
+extract: 
+  model_path: "crypto/models/extract"
+  log_path: "crypto/log/extract_log"
+load: 
+  chunksize: 1000
+transform: 
+  model_path: "crypto/models/transform"
+meta: 
+  log_table: "pipeline_logs"
