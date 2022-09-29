@@ -52,6 +52,10 @@ curl --request GET 'https://data.alpaca.markets/v1beta2/crypto/trades?symbols=DO
 
 ```
 
+## ERD (Sample)
+
+<img src='ERD.png' />
+
 <br/>
 
 ## Breakdown of tasks 
