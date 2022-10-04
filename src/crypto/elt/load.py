@@ -64,7 +64,9 @@ class Load():
                 lower_bound = i 
                 upper_bound = i + chunksize
             insert_statement = postgresql.insert(table_schema).values(df.iloc[lower_bound:upper_bound].to_dict(orient='records'))
-            upsert_statement = insert_statement.on_conflict_do_nothing()
+            upsert_statement = insert_statement.on_conflict_do_update(
+                index_elements=key_columns,
+                set_={c.key: c for c in insert_statement.excluded if c.key not in key_columns})
             logging.info(f"Inserting chunk: [{lower_bound}:{upper_bound}] out of index {max_length}")
             result = engine.execute(upsert_statement)
         return True 

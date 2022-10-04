@@ -47,13 +47,13 @@ class Extract():
                 day = start_date
                 while day.date() <= (pd.to_datetime("today").date()):
                     data = cg.get_coin_history_by_id(id=coin,date=day.date().strftime("%d-%m-%Y"), localization='false')
-                    data['date']= day.date().strftime("%d-%m-%Y")
+                    data['price_date']= day.date().strftime("%d-%m-%Y")
                     list_his.append(data)
                     day = day + pd.Timedelta(1, unit='D')
             
             df = pd.DataFrame(list_his)
-            df['id_date']= df['id'].astype(str)+'_'+df['date'].astype(str)
-            df=df[['id_date','id','symbol','name','market_data','date']]
+            df['id_date']= df['id'].astype(str)+'_'+df['price_date'].astype(str)
+            df=df[['id_date','id','symbol','name','market_data','price_date']]
             df['current_price'] = pd.json_normalize(df['market_data'])['current_price.usd']
             df['market_cap'] = pd.json_normalize(df['market_data'])['market_cap.usd']
             df = df.drop(['market_data','symbol','name'], axis = 1)

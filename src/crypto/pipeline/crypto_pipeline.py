@@ -2,7 +2,7 @@ from crypto.pipeline.extract_load_pipeline import ExtractLoad
 from graphlib import TopologicalSorter
 import os 
 from database.postgres import PostgresDB
-# from crypto.elt.transform import Transform
+from crypto.elt.transform import Transform
 import yaml 
 from io import StringIO
 import logging
@@ -64,9 +64,14 @@ def run_pipeline():
             nodes_extract_load.append(node_extract_load)
             dag.add(node_extract_load)
 
-
-        #transform nodes to be added
-        
+        logging.info("Creating transform nodes")
+        #transform nodes
+        node_staging_coins = Transform("staging_coins", engine=target_engine, models_path=path_transform_model)
+        node_staging_coins_history = Transform("staging_coins_history", engine=target_engine, models_path=path_transform_model)
+        node_staging_trending = Transform("staging_trending", engine=target_engine, models_path=path_transform_model)
+        dag.add(node_staging_coins, *nodes_extract_load)
+        dag.add(node_staging_coins_history, *nodes_extract_load)
+        dag.add(node_staging_trending, *nodes_extract_load)
 
         logging.info("Executing DAG")
         # run dag 
@@ -95,7 +100,7 @@ def run_pipeline():
             db_table=metadata_log_table
         )
 
-        print(run_log.getvalue())
+    print(run_log.getvalue())
 
 if __name__ == "__main__":
     run_pipeline()

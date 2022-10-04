@@ -1,13 +1,13 @@
 {% set config = {
     "extract_type": "incremental", 
-    "incremental_column": "date",
+    "incremental_column": "price_date",
     "key_columns":["id_date"]
 } %}
 
 select 
     id_date,
     id, 
-    date, 
+    price_date, 
     current_price, 
     market_cap, 
     ingestion_date
