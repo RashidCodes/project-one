@@ -20,7 +20,7 @@ class PostgresDB():
             username = db_user,
             password = db_password,
             host = db_server_name, 
-            port = 5432,
+            port = 5433,
             database = db_database_name, 
         )
 
