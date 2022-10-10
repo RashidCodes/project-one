@@ -63,6 +63,31 @@ class Extract():
         except:
             return False
 
+    from http.client import PRECONDITION_FAILED
+
+    @staticmethod
+    def coin_price_history(number_of_days):
+        try:
+            list_of_coins= ['bitcoin','litecoin','ethereum','solana' ,'umee','terra-luna','evmos','dejitaru-tsuka','reserve-rights-token','insights-network']
+            price_coin_df=pd.DataFrame(columns = ['Date', 'Price', 'id', 'ingestion_date'])      
+            for coin in list_of_coins:
+                #Fetch historical coin prices
+                price_date = cg.get_coin_market_chart_by_id(id=coin,vs_currency='usd',days=number_of_days)
+
+                # Create a dataframe to save prices for each coin 
+                historical_price_data = pd.DataFrame(data = price_date['prices'], columns = ['Date', 'Price'])
+                historical_price_data['id'] = coin
+                historical_price_data['id_date']= historical_price_data['id'].astype(str)+'_'+historical_price_data['Date'].astype(str)
+                historical_price_data['Date'] = pd.to_datetime(historical_price_data['Date']/1000, unit = 's')
+                historical_price_data['ingestion_date'] = pd.to_datetime("today").date().strftime("%d-%m-%Y")
+                
+
+                price_coin_df = pd.concat([price_coin_df, historical_price_data], axis = 0, ignore_index = True)
+            
+            return price_coin_df
+        except:
+            return False
+
     @staticmethod
     def get_incremental_value(table_name, path="extract_log"):
         df = pd.read_csv(f"{path}/{table_name}.csv")
@@ -118,6 +143,9 @@ class Extract():
 
                 if table_name == 'coins_history':
                     df = Extract.coins_history(1)
+
+                elif table_name == 'coin_price_history':
+                    df = Extract.coin_price_history(1)
                 
                 if len(df) > 0: 
                     max_incremental_value = df[config["incremental_column"]].max()
@@ -135,6 +163,8 @@ class Extract():
                 elif table_name == 'trending':
                     df = Extract.trending()
                 elif table_name == 'coins_history':
+                    df = Extract.coins_history(8)
+                elif table_name == 'coin_price_history':
                     df = Extract.coins_history(8)    
                     
                 logging.info(f"Successfully extracted table: {table_name}, rows extracted: {len(df)}")
