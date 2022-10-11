@@ -4,6 +4,7 @@
     "key_columns":["id_date"]
 } %}
 
+{# this query is useless #}
 select 
     id_date,
     id, 
@@ -15,5 +16,5 @@ from
     {{ source_table }}
 
 {% if is_incremental %}
-    where date > '{{ incremental_value }}'
+    where price_date > '{{ incremental_value }}'
 {% endif %}
