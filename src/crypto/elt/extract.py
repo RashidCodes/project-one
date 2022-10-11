@@ -47,7 +47,7 @@ class Extract():
                 day = start_date
                 while day.date() <= (pd.to_datetime("today").date()):
                     data = cg.get_coin_history_by_id(id=coin,date=day.date().strftime("%d-%m-%Y"), localization='false')
-                    data['price_date']= day.date().strftime("%d-%m-%Y")
+                    data['price_date']= day.date().strftime('%Y-%m-%d')
                     list_his.append(data)
                     day = day + pd.Timedelta(1, unit='D')
             
@@ -57,13 +57,13 @@ class Extract():
             df['current_price'] = pd.json_normalize(df['market_data'])['current_price.usd']
             df['market_cap'] = pd.json_normalize(df['market_data'])['market_cap.usd']
             df = df.drop(['market_data','symbol','name'], axis = 1)
-            df['ingestion_date'] = pd.to_datetime("today").date().strftime("%d-%m-%Y")
+            df['ingestion_date'] = pd.to_datetime("today")
             
             return df
         except:
             return False
 
-    from http.client import PRECONDITION_FAILED
+
 
     @staticmethod
     def coin_price_history(number_of_days):
@@ -78,20 +78,24 @@ class Extract():
                 historical_price_data = pd.DataFrame(data = price_date['prices'], columns = ['Date', 'Price'])
                 historical_price_data['id'] = coin
                 historical_price_data['id_date']= historical_price_data['id'].astype(str)+'_'+historical_price_data['Date'].astype(str)
-                historical_price_data['Date'] = pd.to_datetime(historical_price_data['Date']/1000, unit = 's')
-                historical_price_data['ingestion_date'] = pd.to_datetime("today").date().strftime("%d-%m-%Y")
-                
-
+            
+                historical_price_data['Date'] = pd.to_datetime(historical_price_data['Date']/1000, unit='s')
+                historical_price_data['ingestion_date'] = pd.to_datetime("today").date().strftime("%Y-%m-%d")
+            
                 price_coin_df = pd.concat([price_coin_df, historical_price_data], axis = 0, ignore_index = True)
             
             return price_coin_df
-        except:
+        except BaseException as err:
+
+            print(err)
             return False
 
     @staticmethod
     def get_incremental_value(table_name, path="extract_log"):
         df = pd.read_csv(f"{path}/{table_name}.csv")
         return df[df["log_date"] == df["log_date"].max()]["incremental_value"].values[0]
+
+
 
     @staticmethod
     def is_incremental(table:str, path:str)->bool:
@@ -103,6 +107,7 @@ class Extract():
             return config["extract_type"].lower() == "incremental"
         except:
             return False
+
 
     @staticmethod
     def upsert_incremental_log(log_path, table_name, incremental_value)->bool:
@@ -136,11 +141,13 @@ class Extract():
             if Extract.is_incremental(table=table_name, path=path):
                 if not os.path.exists(path_extract_log): 
                     os.mkdir(path_extract_log)
+
                 if f"{table_name}.csv" in os.listdir(path_extract_log):
                         # get incremental value and perform incremental extract 
                     current_max_incremental_value = Extract.get_incremental_value(table_name, path=path_extract_log)
 
 
+                # TODO: Implement incremental extraction using the current_max_incremental_value
                 if table_name == 'coins_history':
                     df = Extract.coins_history(1)
 

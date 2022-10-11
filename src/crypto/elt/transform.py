@@ -9,7 +9,7 @@ class Transform():
         self.engine = engine 
         self.models_path = models_path
     
-    def run(self)->bool:
+    def run(self) -> bool:
         """
         Builds models with a matching file name in the models_path folder. 
         - `model`: the name of the model (without .sql)

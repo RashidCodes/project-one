@@ -1,13 +1,15 @@
 from crypto.pipeline.extract_load_pipeline import ExtractLoad
 from graphlib import TopologicalSorter
-import os 
+from io import StringIO
+from utility.metadata_logging import MetadataLogging
 from database.postgres import PostgresDB
 from crypto.elt.transform import Transform
 import yaml 
-from io import StringIO
+import os 
 import logging
-from utility.metadata_logging import MetadataLogging
 import datetime as dt 
+
+
 
 
 def run_pipeline():
@@ -52,26 +54,30 @@ def run_pipeline():
         logging.info("Creating extract and load nodes")
         # extract_load nodes 
         for file in os.listdir(path_extract_model):
-            node_extract_load = ExtractLoad(
-                        source_engine=source_engine, 
-                        target_engine=target_engine,
-                        table_name=file.replace(".sql", ""), 
-                        path=path_extract_model, 
-                        path_extract_log=path_extract_log,
-                        chunksize=chunksize
-                    )
+            node_extract_load = ExtractLoad( 
+                target_engine=target_engine,
+                table_name=file.replace(".sql", ""), 
+                path=path_extract_model, 
+                path_extract_log=path_extract_log,
+                chunksize=chunksize
+            )
             
             nodes_extract_load.append(node_extract_load)
             dag.add(node_extract_load)
 
         logging.info("Creating transform nodes")
+
         #transform nodes
-        node_staging_coins = Transform("staging_coins", engine=target_engine, models_path=path_transform_model)
         node_staging_coins_history = Transform("staging_coins_history", engine=target_engine, models_path=path_transform_model)
-        node_staging_trending = Transform("staging_trending", engine=target_engine, models_path=path_transform_model)
-        dag.add(node_staging_coins, *nodes_extract_load)
+        node_serving_coins_history = Transform("serving_coins_history", engine=target_engine, models_path=path_transform_model)
+
+        node_staging_coin_price_history = Transform("staging_coin_price_history", engine=target_engine, models_path=path_transform_model)
+        node_serving_coin_price_history = Transform("serving_coin_price_history", engine=target_engine, models_path=path_transform_model)
+
         dag.add(node_staging_coins_history, *nodes_extract_load)
-        dag.add(node_staging_trending, *nodes_extract_load)
+        dag.add(node_serving_coins_history, *nodes_extract_load)
+        dag.add(node_staging_coin_price_history, *nodes_extract_load)
+        dag.add(node_serving_coin_price_history, *nodes_extract_load)
 
         logging.info("Executing DAG")
         # run dag 

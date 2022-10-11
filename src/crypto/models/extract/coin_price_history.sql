@@ -1,6 +1,6 @@
 {% set config = {
     "extract_type": "incremental", 
-    "incremental_column": "price_datetimestamp",
+    "incremental_column": "ingestion_date",
     "key_columns":["id_date"]
 } %}
 
@@ -14,5 +14,5 @@ from
     {{ source_table }}
 
 {% if is_incremental %}
-    where date > '{{ incremental_value }}'
+    where ingestion_date > '{{ incremental_value }}'
 {% endif %}
