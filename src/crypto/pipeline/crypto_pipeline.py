@@ -74,10 +74,13 @@ def run_pipeline():
         node_staging_coin_price_history = Transform("staging_coin_price_history", engine=target_engine, models_path=path_transform_model)
         node_serving_coin_price_history = Transform("serving_coin_price_history", engine=target_engine, models_path=path_transform_model)
 
+        node_serving_coins_greater_than_1_USD_latest_price = Transform("serving_coins_greater_than_1_USD_latest_price", engine=target_engine, models_path=path_transform_model)
+
         dag.add(node_staging_coins_history, *nodes_extract_load)
         dag.add(node_serving_coins_history, *nodes_extract_load)
         dag.add(node_staging_coin_price_history, *nodes_extract_load)
         dag.add(node_serving_coin_price_history, *nodes_extract_load)
+        dag.add(node_serving_coins_greater_than_1_USD_latest_price, *nodes_extract_load)
 
         logging.info("Executing DAG")
         # run dag 
