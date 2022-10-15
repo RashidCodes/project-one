@@ -1,4 +1,6 @@
-<title>Crypto Currency ETL Pipeline</title>
+# Crypto Currency ETL Pipeline</title>
+
+<br/>
 
 
 # Introduction
@@ -62,6 +64,8 @@ pip install -r requirements.txt
 
 ```
 
+<br/>
+
 2. Set the `PYTHONPATH` for the project using the command below. Use `set_python_path.bat` for windows.
 
 ```bash 
@@ -71,8 +75,12 @@ cd src
 . ./set_python_path.sh
 ```
 
+<br/>
 
 3. The pipeline extracts data from the CoinGecko API and persists the data in a PostgreSQL database thus, a PostgreSQL database called `crypto` has to be created. Modify the database connection variables found in `src/crypto/config.template.sh`. Use `config.bat` for windows.
+
+
+<br/>
 
 4. The pipeline can now be tested by navigating to the `src/` directory and running the command below 
 
@@ -81,7 +89,7 @@ cd src
 pytest
 ```
 
-<img src="test.PNG" />
+<img src="test.png" />
 
 
 5. The pipeline can be manually triggered by using the following command
@@ -92,7 +100,7 @@ python crypto/pipeline/crypto_pipeline.py
 
 ```
 
-<img src="results.PNG" />
+<img src="results.png" />
 
 
 
@@ -154,8 +162,10 @@ data = cg.get_coin_history_by_id(id=coin,date=date_variable, localization='false
 - Description: This table contains historical market data include price, market cap, and 24h volume. Data granularity is automatic  and cannot be adjusted.
 - Type: incremental, it extracts 1 day from current time = 5 minute interval data
 - How it's getting extracted : In this project, coin_price_history data has been extracted using below code. It loops through thist list of coins('bitcoin','litecoin','ethereum','solana' ,'umee','terra-luna','evmos','dejitaru-tsuka','reserve-rights-token','insights-network') and concatinate the data of each coin to to bottoim of the dataframe.
-```
+
+```python
 price_date = cg.get_coin_market_chart_by_id(id=coin,vs_currency='usd',days=number_of_days)
+```
 
 
 <br/>
