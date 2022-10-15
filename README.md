@@ -50,69 +50,6 @@ The data sources considered during the design stage of pipeline development are 
 <br/>
 
 
-
-# Run the pipeline
-
-Please follow the steps below to successfully trigger the pipeline.
-
-1. The `requirements.txt` file in the `src/` directory contains all the necessary python libraries to run the pipeline. Use the command below to install these dependencies.
-
-```bash 
-
-pip install -r requirements.txt
-
-```
-
-<br/>
-
-2. Set the `PYTHONPATH` for the project using the command below. Use `set_python_path.bat` for windows.
-
-```bash 
-# navigate to the src directory
-cd src 
-
-# set the python path
-. ./set_python_path.sh
-```
-
-<br/>
-
-3. The pipeline extracts data from the CoinGecko API and persists the data in a PostgreSQL database thus, a PostgreSQL database called `crypto` has to be created. Modify the database connection variables found in `src/crypto/config.template.sh`. Use `config.bat` for windows.
-
-
-<br/>
-
-4. The pipeline can now be tested by navigating to the `src/` directory and running the command below 
-
-```bash 
-# E2E test
-pytest
-```
-
-<img src="test.png" />
-
-
-5. The pipeline can be manually triggered by using the following command
-
-```bash 
-
-python crypto/pipeline/crypto_pipeline.py
-
-```
-
-<img src="results.png" />
-
-
-
-<br/>
-
-
-# Entity Population and ETL 
-
-The entites discussed in this section are created following a successful pipeline run.
-
-<br/>
-
 ## ERD
 
 <img src='ERD.png' />
@@ -175,7 +112,7 @@ price_date = cg.get_coin_market_chart_by_id(id=coin,vs_currency='usd',days=numbe
 
 ## Transformations and Manipulations
 
-The scripts used for data manipulation/transformation can be found in `crypto/models/transform`.
+The scripts used for data manipulation/transformation can be found in `crypto/models/transform/`.
 
 
 ### Transformations
@@ -188,6 +125,75 @@ The scripts used for data manipulation/transformation can be found in `crypto/mo
 
 <br/>
 
-### Manipulations 
+### Manipulation
 Anoop, I think you're the best person to describe the data stored in `serving_coins_greater_than_1_USD_latest_price.sql` data manipulation.
+
+
+<br/>
+
+
+# Trigger the pipeline
+
+Please follow the steps below to successfully trigger the pipeline.
+
+<br/>
+
+1. The `requirements.txt` file in the `src/` directory contains all the necessary python libraries to run the pipeline. Use the command below to install these dependencies.
+
+```bash 
+
+pip install -r requirements.txt
+
+```
+
+<br/>
+
+2. Set the `PYTHONPATH` for the project using the command below. Use `set_python_path.bat` for windows.
+
+```bash 
+# navigate to the src directory
+cd src 
+
+# set the python path
+. ./set_python_path.sh
+```
+
+<br/>
+
+3. The pipeline extracts data from the CoinGecko API and persists the data in a PostgreSQL database thus, a PostgreSQL database called `crypto` has to be created. Modify the database connection variables found in `src/crypto/config.template.sh`. Use `config.bat` for windows.
+
+
+<br/>
+
+4. The pipeline can now be tested by navigating to the `src/` directory and running the command below 
+
+```bash 
+# E2E test
+pytest
+```
+
+<img src="test.png" />
+
+
+5. The pipeline can be manually triggered by using the following command
+
+```bash 
+
+python crypto/pipeline/crypto_pipeline.py
+
+```
+
+<img src="results.png" />
+
+
+
+<br/>
+
+
+# Entity Population and ETL 
+
+The entites discussed in this section are created following a successful pipeline run.
+
+<br/>
+
 
