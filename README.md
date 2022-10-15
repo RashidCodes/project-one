@@ -58,7 +58,7 @@ The entites discussed in this section are created following a successful pipelin
 
 ## ERD
 
-<img src='ERD.png' />
+<img src='assets/ERD.png' />
 
 <br/>
 
@@ -178,7 +178,7 @@ cd src
 pytest
 ```
 
-<img src="test.png" />
+<img src="assets/test.png" />
 
 
 5. The pipeline can be manually triggered by using the following command
@@ -189,7 +189,7 @@ python crypto/pipeline/crypto_pipeline.py
 
 ```
 
-<img src="results.png" />
+<img src="assets/results.png" />
 
 
 
