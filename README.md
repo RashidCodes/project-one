@@ -1,52 +1,111 @@
-# Project plan 
+<title>Crypto Currency ETL Pipeline</title>
 
-## Objective 
-What would you like people to do with the data you have produced? Are you supporting BI or ML use-cases? 
 
-<blockquote>The goal is provide crypto data for BI purposes.</blockquote>
+# Introduction
 
-<br/>
+A cryptocurrency is an implementation of blockchain technlogy that allows transactions to be verified cryptographically by nodes on a decentralised network. It is the medium of exchange on a computer network that operates without a central authority. The goal of this project is design and build a simple pipeline that provides high quality and tested data for further analysis. This is especially useful for investors in the crypto markets.
 
-## Consumers 
-What users would find your data useful?
+This project is not a data analysis project however there are some basic questions that have piqued our interests. There are as follows:
 
-<blockquote>Crypto investment bankers.</blockquote>
-
-<br/>
-
-## Questions 
-What questions are you trying to solve with your data? 
-
-1. Correlation between btc and eth prices.
-2. General price trends (economic events)
-3. Risk to reward ratio 
-4. Portfolio optimisations with altcoins 
+- What crypotocurrency has the highest change in trading price on a daily basis?
+- What cryptocurrency has the highest and lowest market capitalisation?
 
 
 <br/>
 
-## Source dataset
+# Datasources 
 
-### CoinGecko API
+The data sources considered during the design stage of pipeline development are provided in *Table 1* below. Upon careful consideration of each option, CoinGecko was selected because of its ease of use and detailed documentation.
 
-- URL: https://algotrading101.com/learn/coingecko-api-guide/
-- How to use :
-1. Need to "pip install pycoingecko" first
-2. Use required api documentation : https://www.coingecko.com/api/documentations/v3#
-3. import the CoinGecko library and set the client up
+| Data Source | Useful Documentation                                                | 
+|-------------|-------------------------------------------------------------------- | 
+| Alpaca      | https://alpaca.markets/learn/getting-started-with-alpaca-crypto-api | 
+| CoinAPI     | https://www.coinapi.io/                                             |
+| CoinGecko   | https://www.coingecko.com/api/documentations/v3                     |
+
+<br/>
+
+
+# Folder Structure 
+
+```text
+
+├── project-one
+	├── Dockerfile
+	├── ERD.png 
+	├── README.md
+	├── src/
+		├── crypto/
+		├── database/
+		├── utility/
+		├── requirements.txt
+		├── set_python_path.bat 
+		├── set_python_path.sh 
+
 
 ```
-from pycoingecko import CoinGeckoAPI
-cg = CoinGeckoAPI()
-```
+
 
 <br/>
 
 
-## Target database
-There is a database named "crypto" created using Postgres and will be used as target database.
 
-## ERD 
+# Run the pipeline
+
+Please follow the steps below to successfully trigger the pipeline.
+
+1. The `requirements.txt` file in the `src/` directory contains all the necessary python libraries to run the pipeline. Use the command below to install these dependencies.
+
+```bash 
+
+pip install -r requirements.txt
+
+```
+
+2. Set the `PYTHONPATH` for the project using the command below. Use `set_python_path.bat` for windows.
+
+```bash 
+
+cd src 
+
+. ./set_python_path.sh
+```
+
+
+3. The pipeline extracts data from the CoinGecko API and persists the data in a PostgreSQL database thus, a PostgreSQL database called `crypto` has to be created. Modify the database connection variables found in `src/crypto/config.template.sh`. Use `config.bat` for windows.
+
+4. The pipeline can now be tested by navigating to the `src/` directory and running the command below 
+
+```bash 
+# E2E test
+pytest
+```
+
+<img src="test.PNG" />
+
+
+5. The pipeline can be manually triggered by using the following command
+
+```bash 
+
+python crypto/pipeline/crypto_pipeline.py
+
+```
+
+<img src="results.PNG" />
+
+
+
+<br/>
+
+
+# Entity Population and ETL 
+
+The entites discussed in this section are created following a successful pipeline run.
+
+<br/>
+
+## ERD
 
 <img src='ERD.png' />
 
@@ -54,7 +113,7 @@ There is a database named "crypto" created using Postgres and will be used as ta
 
 ## Extract & Load
 
-### 1. Coins table: 
+### 1. Coins table:
 - Description: This table contains list of available coins using CoinGecko with only three columns required ('id','name','symbol').
 - Type: Full , this means it will be fully extracted every time we run the code and will be loaded fully into the crypto database
 - How it's getting extracted : In order to get a list of available coins using CoinGecko, the following needs to be done:
@@ -63,14 +122,14 @@ There is a database named "crypto" created using Postgres and will be used as ta
 cg.get_coins_list()
 ```
 
-So to extract coins table required for this project here is the code has been use: 
+So to extract coins table required for this project here is the code has been use:
 ```
 df = pd.DataFrame(cg.get_coins_list(), columns=['id','name','symbol'])
 ```
 
 
 ### 2. Trending table:
-- Description: This table contains list of top 7 trends for the day. 
+- Description: This table contains list of top 7 trends for the day.
 - Type: Full , this means it will be fully extracted every time we run the code and will be loaded fully into the crypto database
 - How it's getting extracted : The following can be used to obtain the trending coins using CoinGecko:
 ```
@@ -97,50 +156,25 @@ data = cg.get_coin_history_by_id(id=coin,date=date_variable, localization='false
 - How it's getting extracted : In this project, coin_price_history data has been extracted using below code. It loops through thist list of coins('bitcoin','litecoin','ethereum','solana' ,'umee','terra-luna','evmos','dejitaru-tsuka','reserve-rights-token','insights-network') and concatinate the data of each coin to to bottoim of the dataframe.
 ```
 price_date = cg.get_coin_market_chart_by_id(id=coin,vs_currency='usd',days=number_of_days)
-```
+
 
 <br/>
 
-## Transformation
+## Transformation 
+
+1. The `price_date` column of the `coins_history` table was renamed to `price_extraction_date` in the staging layer. 
+2. The `current_price` column of the `staging_coins_history` table was rounded to two decimal places in the serving layer. 
+3. The `market_cap` column of the `staging_coins_history` table was rounded to two decimal places in the serving layer. 
+4. The `Price` column of the `coin_price_history` table was rounded to two decimal places in the staging layer.
+5. A new column called `percent_increase` was added to the `staging_coin_price_history` table in the serving layer. 
 
 
-<br>
+<br/>
 
-## Breakdown of tasks 
+## Data Manipulation 
+Anoop, I think you're the best person to describe the data stored in `serving_coins_greater_than_1_USD_latest_price.sql` data manipulation.
 
-<table>
-  <tr>
-    <th>Task</th>
-    <th>Parties</th>
-  </tr>
-  <tr>
-    <td>Extract and Load</td>
-    <td>Puneet, Helen</td>
-  </tr>
-  <tr>
-    <td>Transform</td>
-    <td>Anoop, Rashid</td>
-  </tr>
-  <tr>
-    <td>Stitching the ELT Pipeline Together</td>
-    <td>Puneet, Helen, Anoop, Rashid</td>
-  </tr>
-  <tr>
-    <td>Unit tests and documentation</td>
-    <td>Puneet, Helen, Anoop, Rashid</td>
-  </tr>
-  <tr>
-    <td>Dockerize solution</td>
-    <td>Puneet, Helen, Anoop, Rashid</td>
-  </tr>
-  <tr>
-    <td>Creating the AWS Services (RDS, ECS)</td>
-    <td>Anoop, Rashid</td>
-  </tr>
-  <tr>
-    <td>Pair program on deploying the solution to AWS </td>
-    <td>Anoop, Rashid</td>
-  </tr>
-</table>
+
+
 
 
