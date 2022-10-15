@@ -69,9 +69,10 @@ pip install -r requirements.txt
 2. Set the `PYTHONPATH` for the project using the command below. Use `set_python_path.bat` for windows.
 
 ```bash 
-
+# navigate to the src directory
 cd src 
 
+# set the python path
 . ./set_python_path.sh
 ```
 
@@ -126,12 +127,13 @@ The entites discussed in this section are created following a successful pipelin
 - Type: Full , this means it will be fully extracted every time we run the code and will be loaded fully into the crypto database
 - How it's getting extracted : In order to get a list of available coins using CoinGecko, the following needs to be done:
 
-```
+```python
 cg.get_coins_list()
 ```
 
 So to extract coins table required for this project here is the code has been use:
-```
+
+```python
 df = pd.DataFrame(cg.get_coins_list(), columns=['id','name','symbol'])
 ```
 
@@ -140,12 +142,14 @@ df = pd.DataFrame(cg.get_coins_list(), columns=['id','name','symbol'])
 - Description: This table contains list of top 7 trends for the day.
 - Type: Full , this means it will be fully extracted every time we run the code and will be loaded fully into the crypto database
 - How it's getting extracted : The following can be used to obtain the trending coins using CoinGecko:
-```
+
+```python
 cg.get_search_trending()
 ```
 
 In this project, trending data has been extracted using below code, and then unnecessary columns are droped.
-```
+
+```python
 trend = cg.get_search_trending()
 ```
 
@@ -154,7 +158,8 @@ trend = cg.get_search_trending()
 <br>
 - Type: incremental, means it extracts data since the last day and upsert it into the correspondant table in crypto database
 - How it's getting extracted : In this project, coins_history data has been extracted using below code, and then unnecessary columns are droped.
-```
+
+```python
 data = cg.get_coin_history_by_id(id=coin,date=date_variable, localization='false')
 ```
 
@@ -170,8 +175,12 @@ price_date = cg.get_coin_market_chart_by_id(id=coin,vs_currency='usd',days=numbe
 
 <br/>
 
-## Transformation 
+## Transformations and Manipulations
 
+The scripts used for data manipulation/transformation can be found in `crypto/models/transform`.
+
+
+### Transformations
 1. The `price_date` column of the `coins_history` table was renamed to `price_extraction_date` in the staging layer. 
 2. The `current_price` column of the `staging_coins_history` table was rounded to two decimal places in the serving layer. 
 3. The `market_cap` column of the `staging_coins_history` table was rounded to two decimal places in the serving layer. 
@@ -181,7 +190,7 @@ price_date = cg.get_coin_market_chart_by_id(id=coin,vs_currency='usd',days=numbe
 
 <br/>
 
-## Data Manipulation 
+### Manipulations 
 Anoop, I think you're the best person to describe the data stored in `serving_coins_greater_than_1_USD_latest_price.sql` data manipulation.
 
 
