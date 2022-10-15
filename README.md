@@ -1,7 +1,6 @@
-# Crypto Currency ETL Pipeline</title>
+# Crypto Currency ETL Pipeline
 
 <br/>
-
 
 # Introduction
 
@@ -155,7 +154,6 @@ trend = cg.get_search_trending()
 
 ### 3. Coins_history table:
 - Description: This table contains historical daily data (price , marketcap) for this list of coins ('bitcoin','litecoin','ethereum','solana' ,'umee','terra-luna','evmos','dejitaru-tsuka','reserve-rights-token','insights-network')
-<br>
 - Type: incremental, means it extracts data since the last day and upsert it into the correspondant table in crypto database
 - How it's getting extracted : In this project, coins_history data has been extracted using below code, and then unnecessary columns are droped.
 
@@ -192,8 +190,4 @@ The scripts used for data manipulation/transformation can be found in `crypto/mo
 
 ### Manipulations 
 Anoop, I think you're the best person to describe the data stored in `serving_coins_greater_than_1_USD_latest_price.sql` data manipulation.
-
-
-
-
 
