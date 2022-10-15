@@ -134,7 +134,7 @@ Anoop, I think you're the best person to describe the data stored in `serving_co
 
 # Trigger the pipeline
 
-Please follow the steps below to successfully trigger the pipeline.
+Follow the steps below to successfully trigger the pipeline.
 
 <br/>
 
