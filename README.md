@@ -50,6 +50,12 @@ The data sources considered during the design stage of pipeline development are 
 <br/>
 
 
+# Entity Population and ETL 
+
+The entites discussed in this section are created following a successful pipeline run.
+
+<br/>
+
 ## ERD
 
 <img src='ERD.png' />
@@ -188,12 +194,4 @@ python crypto/pipeline/crypto_pipeline.py
 
 
 <br/>
-
-
-# Entity Population and ETL 
-
-The entites discussed in this section are created following a successful pipeline run.
-
-<br/>
-
 
