@@ -127,13 +127,12 @@ The scripts used for data manipulation/transformation can be found in `crypto/mo
 3. The `market_cap` column of the `staging_coins_history` table was rounded to two decimal places in the serving layer. 
 4. The `Price` column of the `coin_price_history` table was rounded to two decimal places in the staging layer.
 5. A new column called `percent_increase` was added to the `staging_coin_price_history` table in the serving layer. 
-
-
-<br/>
-
-### Manipulation
-Anoop, I think you're the best person to describe the data stored in `serving_coins_greater_than_1_USD_latest_price.sql` data manipulation.
-
+6. A serving table called `serving_coins_greater_than_1_USD_latest_price` was created. The purpose of this serving table is to show all latest prices of coins, ordered by their price, showing only coins with their latest price above 1 USD.
+It contained the following transforms:
+- Join between `date` from `public.coin_price_history`, aliased as `latest_date`, and `Date` from `public.coin_price_history` aliased as `hist`
+- Renaming/aliasing of column names
+- Sorting (in order of latest coin price descending)
+- Where clause (>1 USD)
 
 <br/>
 
