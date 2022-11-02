@@ -137,7 +137,7 @@ It contained the following transforms:
 <br/>
 
 
-# Trigger the pipeline
+# Trigger the pipeline locally
 
 Follow the steps below to successfully trigger the pipeline.
 
@@ -194,3 +194,24 @@ python crypto/pipeline/crypto_pipeline.py
 
 <br/>
 
+# The pipeline on AWS 
+
+The pipeline was containerised using the `Dockerfile` in the repo. The image was then pushed to `ECR` as shown in Figure 1 below.
+
+<img src='assets/ecr-image.png' />
+
+An ECS cluster is then used to run the containerised application (image).
+
+<img src='assets/cluster.png' />
+
+The job is monitored using CloudWatch
+
+<img src='assets/cloud-watch.png' />
+
+And finally, the `crypto` database is inspected to verify the existence of the necessary relations.
+
+<img src='assets/crypto-tables.png'/>
+
+See the `serving_coin_price_history` table below.
+
+<img src='assets/coin-price-history.png' />
