@@ -3,6 +3,5 @@
 *__pycache__**
 *.csv
 *.pyc
+*push.sh
 .env
-test.sh
-
